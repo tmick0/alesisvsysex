@@ -116,3 +116,8 @@ def test_knobs_deserialize():
                0x00, 0x43, 0x7f, 0x00, 0x00])
     b = Buttons.deserialize(b)
     assert b.button1.cc == 0x40 and b.button2.cc == 0x41 and b.button3.cc == 0x42 and b.button4.cc == 0x43
+
+def test_alesisv_default_const():
+    a = AlesisV()
+    assert a.buttons.button1.cc == 0x30
+
