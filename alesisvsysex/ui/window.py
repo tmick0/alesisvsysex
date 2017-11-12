@@ -28,40 +28,53 @@ class ActionMenuWidget (QWidget):
         self.setLayout(layout)
         self.setFixedHeight(50)
 
+class ContainerWidget (QWidget):
+
+    def __init__(self):
+        super().__init__()
+        
+    def getModel(self):
+        p = self.parent()
+        while not isinstance(p, EditorWidget):
+            p = p.parent()
+        return p.getModel()
+
 class EditorWidget (QTabWidget):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.model = self.parentWidget().parentWidget().model
         self.initLayout()
         
     def initLayout(self):
     
         pane1l = QHBoxLayout()
-        pane1l.addWidget(BasicWidget(self, "Keys", self.model.keys))
-        pane1l.addWidget(BasicWidget(self, "Pitch Wheel", self.model.pwheel))
-        pane1l.addWidget(BasicWidget(self, "Mod Wheel", self.model.mwheel))
-        pane1l.addWidget(BasicWidget(self, "Sustain", self.model.sustain))
+        pane1l.addWidget(BasicWidget(self, "Keys", 'keys'))
+        pane1l.addWidget(BasicWidget(self, "Pitch Wheel", 'pwheel'))
+        pane1l.addWidget(BasicWidget(self, "Mod Wheel", 'mwheel'))
+        pane1l.addWidget(BasicWidget(self, "Sustain", 'sustain'))
         
-        pane1 = QWidget()
+        pane1 = ContainerWidget()
         pane1.setLayout(pane1l)
         
         pane2l = QVBoxLayout()
-        pane2l.addWidget(CompoundWidget(self, "Knobs", self.model.knobs))
-        pane2l.addWidget(CompoundWidget(self, "Buttons", self.model.buttons))
+        pane2l.addWidget(CompoundWidget(self, "Knobs", 'knobs'))
+        pane2l.addWidget(CompoundWidget(self, "Buttons", 'buttons'))
         
-        pane2 = QWidget()
+        pane2 = ContainerWidget()
         pane2.setLayout(pane2l)
         
         pane3l = QVBoxLayout()
-        pane3l.addWidget(CompoundWidget(self, "Pads", self.model.pads))
+        pane3l.addWidget(CompoundWidget(self, "Pads", 'pads'))
         
-        pane3 = QWidget()
+        pane3 = ContainerWidget()
         pane3.setLayout(pane3l)
         
         self.addTab(pane1, "Keys / Wheels / Sustain")
         self.addTab(pane2, "Knobs / Buttons")
         self.addTab(pane3, "Pads")
+
+    def getModel(self):
+        return self.parentWidget().parentWidget().model
 
 class MainWidget (QWidget):
     
