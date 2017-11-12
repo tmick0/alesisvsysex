@@ -88,7 +88,7 @@ class BasicWidget (QGroupBox):
         
         self.setLayout(layout)
 
-class EditorWidget (QWidget):
+class EditorWidget (QTabWidget):
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -96,7 +96,8 @@ class EditorWidget (QWidget):
         self.initLayout()
         
     def initLayout(self):
-        pane1l = QVBoxLayout()
+    
+        pane1l = QHBoxLayout()
         pane1l.addWidget(BasicWidget(self, "Keys", self.model.keys))
         pane1l.addWidget(BasicWidget(self, "Pitch Wheel", self.model.pwheel))
         pane1l.addWidget(BasicWidget(self, "Mod Wheel", self.model.mwheel))
@@ -118,12 +119,9 @@ class EditorWidget (QWidget):
         pane3 = QWidget()
         pane3.setLayout(pane3l)
         
-        layout = QHBoxLayout()
-        layout.addWidget(pane1)
-        layout.addWidget(pane2)
-        layout.addWidget(pane3)
-        
-        self.setLayout(layout)
+        self.addTab(pane1, "Keys / Wheels / Sustain")
+        self.addTab(pane2, "Knobs / Buttons")
+        self.addTab(pane3, "Pads")
 
 class MainWidget (QWidget):
     
