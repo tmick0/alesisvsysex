@@ -1,5 +1,6 @@
 from alesisvsysex.device.alesis import *
 from alesisvsysex.protocol.sysex import *
+from alesisvsysex.protocol.types import *
 from alesisvsysex.protocol.model import *
 
 def test_v25_constructor():
@@ -23,11 +24,11 @@ def test_v25_set_config():
     orig = d.get_config()
     
     new = orig.copy()
-    new.knobs.knob1.cc += 1
+    new.knobs.knob1.cc = IntValue(new.knobs.knob1.cc.as_int() + 1)
     d.set_config(new)
     
     verify = d.get_config()
-    success = (verify.knobs.knob1.cc == new.knobs.knob1.cc)
+    success = (verify.knobs.knob1.cc.as_int() == new.knobs.knob1.cc.as_int())
     
     d.set_config(orig)
     assert(success)

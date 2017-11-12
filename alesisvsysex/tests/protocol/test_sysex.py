@@ -1,3 +1,4 @@
+from alesisvsysex.protocol.types import *
 from alesisvsysex.protocol.model import AlesisV
 from alesisvsysex.protocol.sysex import SysexMessage
 
@@ -19,12 +20,12 @@ def test_sysex_serialize_update():
 
 def test_sysex_deserialize_reply():
     m = AlesisV()
-    m.buttons.button1.cc = 0x55
+    m.buttons.button1.cc = IntValue(0x55)
     
     q = SysexMessage('reply', m)
     b = q.serialize()
     
     r = SysexMessage.deserialize(b)
     assert r.type == 'reply'
-    assert r.model.buttons.button1.cc == 0x55
+    assert r.model.buttons.button1.cc.as_int() == 0x55
 

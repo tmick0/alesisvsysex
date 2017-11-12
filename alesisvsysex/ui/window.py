@@ -63,7 +63,7 @@ class BasicWidget (QGroupBox):
     def initLayout(self):
         layout = QFormLayout()
         
-        for field, _ in self.componentModel._PARAMS:
+        for field, cls, _ in self.componentModel._PARAMS:
             fieldName = QLabel(field)
             fieldValue = QSpinBox()
             layout.addRow(fieldName, fieldValue)
