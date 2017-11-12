@@ -50,6 +50,19 @@ def test_keys_deserialize():
     k = Keys.deserialize(b)
     assert k.base_note == 0x0d and k.octave == 0x0c and k.channel == 0x0b and k.curve == 0x0a
 
+def test_keys_copy():
+    k1 = Keys(octave=0x00)
+    k2 = k1.copy()
+    assert k2.octave == 0x00
+    
+    k1.octave = 0xaa
+    assert k1.octave == 0xaa
+    assert k2.octave == 0x00
+    
+    k2.octave = 0xbb
+    assert k1.octave == 0xaa
+    assert k2.octave == 0xbb
+
 def test_knobs_default_const():
     k = Knobs()
     assert k.knob1.cc == 0x14
@@ -68,6 +81,20 @@ def test_knobs_deserialize():
                0x00, 0xdd, 0x00, 0x7f, 0x00])
     k = Knobs.deserialize(b)
     assert k.knob1.cc == 0xaa and k.knob2.cc == 0xbb and k.knob3.cc == 0xcc and k.knob4.cc == 0xdd
+
+def test_knobs_copy():
+    k1 = Knobs()
+    k1.knob1.cc = 0x10
+    k2 = k1.copy()
+    assert k1.knob1.cc == 0x10
+    
+    k1.knob1.cc = 0x11
+    assert k1.knob1.cc == 0x11
+    assert k2.knob1.cc == 0x10
+    
+    k2.knob1.cc = 0x12
+    assert k1.knob1.cc == 0x11
+    assert k2.knob1.cc == 0x12
 
 def test_pads_default_const():
     p = Pads()

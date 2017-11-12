@@ -30,7 +30,7 @@ class CompoundComponent (object):
         # Override with keyword arguments
         for k, v in kwargs.items():
             try:
-                next(kk for kk, cls, _ in self._COMPONENTS if kk == k)
+                cls = next(cls for kk, cls, _ in self._COMPONENTS if kk == k)
                 if not isinstance(v, cls):
                     raise ValueError("Got type '%s' for component '%s', "
                                      "expected a '%s'."
@@ -40,6 +40,9 @@ class CompoundComponent (object):
             except StopIteration:
                 raise ValueError("Invalid argument '%s' for component '%s'."
                                  % (k, self.__class__.__name__))
+     
+    def copy(self):
+        return self.__class__(**{k: v.copy() for k, v in self._components.items()})
      
     def serialize(self):
         return b''.join(self._components[k].serialize() for k, cls, _ in self._COMPONENTS)
@@ -98,6 +101,9 @@ class BasicComponent (object):
             except StopIteration:
                 raise ValueError("Invalid argument '%s' for component '%s'."
                                  % (k, self.__class__.__name__))
+    
+    def copy(self):
+        return self.__class__(**{k: v for k, v in self._params.items()})
     
     def serialize(self):
         return struct.pack("B" * len(self._PARAMS),
