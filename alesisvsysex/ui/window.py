@@ -54,18 +54,37 @@ class CompoundWidget (QGroupBox):
         self.setLayout(layout)
 
 class IntegerSelector (QSpinBox):
+
     def __init__(self, parent, field, model):
         super().__init__(parent)
         self.fieldName = field
         self.componentModel = model
+        self.setRange(0x00, 0x7f)
+        self.setSingleStep(1)
+        self.updateState()
+        
+    def updateState(self):
+        self.setValue(getattr(self.componentModel, self.fieldName).as_int())
 
 class EnumSelector (QComboBox):
+
     def __init__(self, parent, field, model):
         super().__init__(parent)
         self.fieldName = field
         self.componentModel = model
-        for k, v in sorted(model._params[field]._VALUES.items(), key=lambda x: x[1]):
+        self.enumValues = list(sorted(model._params[field]._VALUES.items(), key=lambda x: x[1]))
+        for k, v in self.enumValues:
             self.addItem(k, v)
+        self.updateState()
+        
+    def updateState(self):
+        for i, (k, v) in enumerate(self.enumValues):
+            if getattr(self.componentModel, self.fieldName).as_int() == v:
+                self.setCurrentIndex(i)
+                break
+        else:
+            raise RuntimeError("Invalid state for component '%s' field '%s'"
+                               % (self.componentModel.__class__.__name__, self.fieldName))
 
 class BasicWidget (QGroupBox):
     
