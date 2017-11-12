@@ -1,8 +1,8 @@
 from alesisvsysex.protocol.model import *
 
 def test_keys_getattr():
-    k = Keys(0x01, 0x02, 0x03)
-    assert k.base_note == 0x01 and k.octave == 0x02 and k.channel == 0x03
+    k = Keys(0x01, 0x02, 0x03, 0x04)
+    assert k.base_note == 0x01 and k.octave == 0x02 and k.channel == 0x03 and k.curve == 0x04
     
 def test_keys_bad_getattr():
     k = Keys()
@@ -30,24 +30,25 @@ def test_keys_bad_kwarg_const():
         assert True
 
 def test_keys_setattr():
-    k = Keys(0x01, 0x02, 0x03)
+    k = Keys(0x01, 0x02, 0x03, 0x04)
     k.base_note = 0xaa
     k.octave = 0xbb
     k.channel = 0xcc
-    assert k.base_note == 0xaa and k.octave == 0xbb and k.channel == 0xcc
+    k.curve = 0xdd
+    assert k.base_note == 0xaa and k.octave == 0xbb and k.channel == 0xcc and k.curve == 0xdd
 
 def test_keys_num_bytes():
     k = Keys()
-    assert k.num_bytes() == 3
+    assert k.num_bytes() == 4
 
 def test_keys_serialize():
-    k = Keys(0x0a, 0x0b, 0x0c)
-    assert k.serialize() == bytes([0x0a, 0x0b, 0x0c])
+    k = Keys(0x0a, 0x0b, 0x0c, 0x0d)
+    assert k.serialize() == bytes([0x0a, 0x0b, 0x0c, 0x0d])
 
 def test_keys_deserialize():
-    b = bytes([0x0c, 0x0b, 0x0a])
+    b = bytes([0x0d, 0x0c, 0x0b, 0x0a])
     k = Keys.deserialize(b)
-    assert k.base_note == 0x0c and k.octave == 0x0b and k.channel == 0x0a
+    assert k.base_note == 0x0d and k.octave == 0x0c and k.channel == 0x0b and k.curve == 0x0a
 
 def test_knobs_default_const():
     k = Knobs()

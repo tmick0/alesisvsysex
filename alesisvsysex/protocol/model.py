@@ -58,7 +58,7 @@ class CompoundComponent (object):
     
     @classmethod
     def num_bytes(cls):
-        return sum(cls.num_bytes() for k, cls, _ in cls._COMPONENTS)
+        return sum(c.num_bytes() for k, c, _ in cls._COMPONENTS)
     
     @classmethod
     def deserialize(cls, bytes):
@@ -129,7 +129,8 @@ class Keys (BasicComponent):
     _PARAMS = [
         ('base_note',   0x0c),
         ('octave',      0x02),
-        ('channel',     0x00)
+        ('channel',     0x00),
+        ('curve',       0x00)
     ]
 
 class PitchWheel (BasicComponent):
