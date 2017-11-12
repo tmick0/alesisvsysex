@@ -64,6 +64,8 @@ class EnumSelector (QComboBox):
         super().__init__(parent)
         self.fieldName = field
         self.componentModel = model
+        for k, v in sorted(model._params[field]._VALUES.items(), key=lambda x: x[1]):
+            self.addItem(k, v)
 
 class BasicWidget (QGroupBox):
     
