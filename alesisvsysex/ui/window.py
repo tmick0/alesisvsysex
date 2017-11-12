@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from alesisvsysex.protocol.types import AbstractEnumValue, IntValue
 from alesisvsysex.protocol.model import AlesisV, CompoundComponent, BasicComponent
 
 __all__ = ['AlesisVSysexApplication']
@@ -52,6 +53,18 @@ class CompoundWidget (QGroupBox):
                 layout.addWidget(CompoundWidget(self, name, model))
         self.setLayout(layout)
 
+class IntegerSelector (QSpinBox):
+    def __init__(self, parent, field, model):
+        super().__init__(parent)
+        self.fieldName = field
+        self.componentModel = model
+
+class EnumSelector (QComboBox):
+    def __init__(self, parent, field, model):
+        super().__init__(parent)
+        self.fieldName = field
+        self.componentModel = model
+
 class BasicWidget (QGroupBox):
     
     def __init__(self, parent, name, model):
@@ -65,7 +78,10 @@ class BasicWidget (QGroupBox):
         
         for field, cls, _ in self.componentModel._PARAMS:
             fieldName = QLabel(field)
-            fieldValue = QSpinBox()
+            if issubclass(cls, IntValue):
+                fieldValue = IntegerSelector(self, field, self.componentModel)
+            elif issubclass(cls, AbstractEnumValue):
+                fieldValue = EnumSelector(self, field, self.componentModel)
             layout.addRow(fieldName, fieldValue)
         
         self.setLayout(layout)
