@@ -1,9 +1,8 @@
 import struct
 
-class AbstractBaseValue (object):
-    pass
-    
-class AbstractEnumValue (AbstractBaseValue):
+__all__ = ['AbstractEnumValue', 'IntValue', 'KnobModeEnum', 'ButtonModeEnum', 'PadModeEnum']
+
+class AbstractEnumValue (object):
 
     _VALUES = {}
 
@@ -43,7 +42,7 @@ class AbstractEnumValue (AbstractBaseValue):
     def deserialize(cls, b):
         return cls(int(b[0]))
     
-class IntValue (AbstractBaseValue):
+class IntValue (object):
 
     def __init__(self, val):
         if not isinstance(val, int):
