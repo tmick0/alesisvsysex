@@ -10,28 +10,38 @@ class AlesisV25Device (object):
     def __init__(self):
         for port in mido.get_ioport_names():
             if port.startswith(self._PORT_PREFIX):
-                self.port = mido.open_ioport(port)
+                self._port = mido.open_ioport(port)
                 break
         else:
             raise RuntimeError("Could not find a port named '%s'" % self._PORT_PREFIX)
     
     def __del__(self):
         try:
-            self.port.close()
+            self._port.close()
         except:
             pass
 
-    def send(self, message):
+    def _send(self, message):
         if not isinstance(message, SysexMessage):
             raise ValueError("Can only send a SysexMessage")
         p = mido.Parser()
         p.feed(message.serialize())
-        self.port.send(p.get_message())
+        self._port.send(p.get_message())
 
-    def recv(self):
+    def _recv(self):
         while True:
-            r = self.port.receive()
+            r = self._port.receive()
             if r.type == 'sysex':
                 break
         return SysexMessage.deserialize(r.bin())
+
+    def get_config(self):
+        self._send(SysexMessage('query'))
+        return self._recv().model
+    
+    def set_config(self, model):
+        model_bin = model.serialize()
+        self._send(SysexMessage('update', model))
+        if self.get_config().serialize() != model_bin:
+            raise RuntimeError('Failed to update configuration')
 
