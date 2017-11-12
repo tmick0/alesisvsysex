@@ -1,6 +1,6 @@
 import struct
 
-__all__ = ['AlesisV', 'Keys' , 'PitchWheel', 'ModWheel', 'Sustain', 'Knob', 'Knobs', 'Pad', 'Pads', 'Button', 'Buttons']
+__all__ = ['CompoundComponent', 'BasicComponent', 'AlesisV', 'Keys' , 'PitchWheel', 'ModWheel', 'Sustain', 'Knob', 'Knobs', 'Pad', 'Pads', 'Button', 'Buttons']
     
 class CompoundComponent (object):
     
