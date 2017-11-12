@@ -9,6 +9,7 @@ class BasicWidget (QGroupBox):
         super().__init__(name, parent)
         self.componentName = name
         self.componentKey = component_key
+        self.children = []
         self.initLayout()
     
     def initLayout(self):
@@ -20,9 +21,14 @@ class BasicWidget (QGroupBox):
                 fieldValue = IntegerSelector(self, field)
             elif issubclass(cls, AbstractEnumValue):
                 fieldValue = EnumSelector(self, field)
+            self.children.append(fieldValue)
             layout.addRow(fieldName, fieldValue)
         
         self.setLayout(layout)
+        
+    def updateState(self):
+        for c in self.children:
+            c.updateState()
     
     def getModel(self):
         return getattr(self.parent().getModel(), self.componentKey)
@@ -36,6 +42,7 @@ class CompoundWidget (QGroupBox):
             super().__init__(parent)
         self.componentName = name
         self.componentKey = component_key
+        self.children = []
         self.initLayout()
     
     def initLayout(self):
@@ -47,10 +54,16 @@ class CompoundWidget (QGroupBox):
         for name, _, __ in self.getModel()._COMPONENTS:
             model = self.getModel()._components[name]
             if isinstance(model, BasicComponent):
-                layout.addWidget(BasicWidget(self, name, name))
+                widget = BasicWidget(self, name, name)
             elif isinstance(model, CompoundComponent):
-                layout.addWidget(CompoundWidget(self, name, name))
+                widget = CompoundWidget(self, name, name)
+            self.children.append(widget)
+            layout.addWidget(widget)
         self.setLayout(layout)
+
+    def updateState(self):
+        for c in self.children:
+            c.updateState()
 
     def getModel(self):
         return getattr(self.parent().getModel(), self.componentKey)
