@@ -6,7 +6,7 @@ Python tool for configuring Alesis V-Series MIDI controllers
 
 ## Overview
 
-The official tool for configuring these controllers only works on Windows. Fortunately, I was able to [reverse engineer the SysEx protocol](https://lo.calho.st/projects/reverse-engineering-the-alesis-v-series-sysex-protocol/) and implement this (eventually) cross-platform tool.
+The official tool for configuring these controllers only works on Windows. Fortunately, I was able to [reverse engineer the SysEx protocol](https://lo.calho.st/posts/reverse-engineering-sysex/) and implement this (eventually) cross-platform tool.
 
 Currently, this software is only known to work on Linux, and probably only supports the Alesis V-25 controller. It includes a model for the parts of the SysEx protocol I was able to reverse (i.e., most of it), the ability to fetch and update the device config, and the ability to store and load configurations as files.
 
